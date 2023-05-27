@@ -23,14 +23,3 @@ import sys
          #break
  #s.close()
  #
-
-def rules1(str):
-    return (str[::-1])
-
-def rules2(str):
-    if (len(str) % 2 == 0) :
-        res = str[len(str) / 2:]
-        res = res + str[:len(str) / 2]
-    else :
-        res = str.replace(str[len(str) / 2], '')
-    return (res)
