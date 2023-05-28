@@ -64,35 +64,76 @@ def somme(word, idx):
 	res = 0
 	n = idx + 1
 	while (idx >= 0):
-		if (isVoyelle(word[idx])):
+		if (isVoyelle(word[idx]) or isMajVoyelle(word[idx])):
 			res = res + ord(word[idx]) * pow(2, n - idx)
 		idx = idx - 1
 	return (res)
 
 def getVp(vp):
 	while (vp >= 65):
-		if (isVoyelle(chr(vp))):
+		if (isVoyelle(chr(vp)) or isMajVoyelle(chr(vp))):
 			return (vp)
 		vp = vp - 1
+	return (vp)
 
-def get_val(vp, word, idx):
+def get_val(vp, word, n):
 	vp = getVp(vp)
-	return (((vp + somme(word, idx - 1)) % 95) + 32)
+	return (((vp + somme(word, n - 1)) % 95) + 32)
 
 def rules4(str):
 	li = list(str)
 	i = 0
 	while (i != len(li)):
 		if (not isVoyelle(li[i]) and not isMajVoyelle(li[i]) and li[i].isalpha()):
-			li.insert(i + 1, chr(get_val(ord(li[i]) - 1, li, i)))
+			#print(li[i])
+			li.insert(i + 1, chr(get_val(ord(li[i]), li, i)))
 		i = i + 1;
 	return ("".join(li))
 
-str = "cosette"
+def order(str):
+	dict = {}
+	for letter in str:
+		if (dict.get(letter, 0) == 0):
+			dict.update({letter : 1})
+		else :
+			dict.update({letter : int(dict.get(letter)) + 1})
+	res = ""
+	val = dict.values()
+	while (len(val) - 1 > 0):
+		val = list(dict.values())
+		max = 0
+		idx_buf = -1;
+		for idx in range(0, len(val)):
+			if (val[idx] > max):
+				max = val[idx]
+				idx_buf = idx
+			elif (val[idx] == max):
+				if (idx_buf != -1 and ord(list(dict.keys())[idx]) < ord(list(dict.keys())[idx_buf])):
+					idx_buf = idx
+					max = val[idx]
+		i = 0
+		while (i < max) :
+			res = res + list(dict.keys())[idx_buf]
+			i = i + 1
+		if (idx_buf != -1):
+			dict.pop(list(dict.keys())[idx_buf])
+	return (res)
 
-print(str)
-print(rules1(str))
-print(rules2(rules1(str)))
-print(rules3(rules2(rules1(str)), "cosette"))
-print(rules4("futur"));
 
+str = "lecteur doute devine madeleine autre valjean avons regarde profondeurs cette conscience moment regarder encore faisons emotion tremblement existe terrifiant cette sorte contemplation esprit trouver nulle eblouissements tenebres homme fixer aucune chose redoutable compliquee mysterieuse infinie spectacle grand spectacle grand interieur faire poeme conscience humaine propos homme propos infime hommes serait fondre toutes epopees epopee superieure definitive conscience chaos chimeres convoitises tentatives fournaise reves antre idees honte pandemonium sophismes champ bataille passions certaines heures penetrez travers livide humain reflechit regardez derriere regardez cette regardez cette obscurite silence exterieur combats geants comme homere melees dragons hydres nuees fantomes comme milton spirales visionnaires"
+idx = 0
+res = ""
+while (idx < len(str) -1 ):
+	pos = str.find(" ", idx)
+	print(str[idx:pos])
+	if (res == ""):
+		res = res + order(rules4(rules3(rules2(rules1(str[idx:pos])), str[idx:pos])))
+	else :
+		res = res + " " + order(rules4(rules3(rules2(rules1(str[idx:pos])), str[idx:pos])))
+	idx = pos + 1
+	if (idx == 0):
+		break
+
+print(res)
+#print(order(rules4(rules3(rules2(rules1("nuees")),"nuees"))))
+	
