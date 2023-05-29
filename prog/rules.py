@@ -125,7 +125,6 @@ idx = 0
 res = ""
 while (idx < len(str) -1 ):
 	pos = str.find(" ", idx)
-	print(str[idx:pos])
 	if (res == ""):
 		res = res + order(rules4(rules3(rules2(rules1(str[idx:pos])), str[idx:pos])))
 	else :
@@ -134,6 +133,6 @@ while (idx < len(str) -1 ):
 	if (idx == 0):
 		break
 
-print(res)
-#print(order(rules4(rules3(rules2(rules1("nuees")),"nuees"))))
+#print(res)
+print(order(rules4(rules3(rules2(rules1("cosette")),"cosette"))))
 	

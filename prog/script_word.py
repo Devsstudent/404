@@ -20,30 +20,57 @@ def get_next_pos_voyelle(str, pos):
 			return elem
 	return (len(str) - 1)
 
+def get_next_pos_voyelle_r(str, pos):
+	i = pos
+	while (i > -1):
+		if (isVoyelle(str[i])):
+			return i
+		i = i - 1
+	return (len(str) - 1)
 
 def switch_right(st):
-	st = st[::-1]
 	li = list(st)
-	for elem in range(0, len(li) - 1) :
-		if isVoyelle(li[elem]):
-			poss = get_next_pos_voyelle(li, elem + 1)
+	i = 0;
+	poss = 0
+	idx = -1
+	while (i < len(st)):
+		if isVoyelle(li[i]) and poss == 0:
+			idx = i
+			poss = get_next_pos_voyelle(li, i + 1)
 			if (poss == len(st) - 1):
-				return "".join(li)[::-1]
+				return "".join(li)
 			buff = li[poss]
-			li[poss] = li[elem]
-			li[elem] = buff
-	return "".join(li)[::-1]
+			li[poss] = li[idx]
+			li[idx] = buff
+		elif (isVoyelle(li[i]) and i != poss):
+			poss = i
+			buff = li[poss]
+			li[poss] = li[idx]
+			li[idx] = buff
+		i = i + 1
+	return "".join(li)
+
 
 def switch_left(st):
 	li = list(st)
-	for elem in range(0, len(li) - 1) :
-		if isVoyelle(li[elem]):
-			poss = get_next_pos_voyelle(li, elem + 1)
-			if (poss == len(st) - 1 and isVoyelle(li[poss]) == False):
-				return "".join(li)[::-1]
+	i = len(st) - 1
+	poss = 0
+	idx = -1
+	while (i > -1):
+		if isVoyelle(li[i]) and poss == 0:
+			idx = i
+			poss = get_next_pos_voyelle_r(li, i - 1)
+			if (poss == len(st) - 1):
+				return "".join(li)
 			buff = li[poss]
-			li[poss] = li[elem]
-			li[elem] = buff
+			li[poss] = li[idx]
+			li[idx] = buff
+		elif (isVoyelle(li[i]) and i != poss):
+			poss = i
+			buff = li[poss]
+			li[poss] = li[idx]
+			li[idx] = buff
+		i = i - 1
 	return "".join(li)
 
 def rules1(str):
@@ -58,6 +85,8 @@ def rules2(str):
 	return (res)
 
 def rules3(str, original):
+	if (len(str) <= 2):
+		return (str) 
 	if (isVoyelle(str[2])):
 		return (rules2(rules1(switch_right(original))))
 	else:
@@ -124,12 +153,12 @@ def order(str):
 
 def parse_reply(data):
     posave = data.find("\n", data.find("\n") + 1)
-    str = data[ posave + 11:data.find("\n", posave + 1) - 1]
+    str = data[ posave + 11:data.find("\n", posave + 1) ]
     idx = 0
     res = ""
     while (idx < len(str) -1 ):
 	    pos = str.find(" ", idx)
-	   # print(str[idx:pos])
+	    print(str[idx:pos])
 	    if (res == ""):
 		    res = res + order(rules4(rules3(rules2(rules1(str[idx:pos])), str[idx:pos])))
 	    else :
